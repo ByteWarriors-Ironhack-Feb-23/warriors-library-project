@@ -10,3 +10,15 @@ a {
 h1 {
   color: 15px;
 }
+
+nav {
+  margin-bottom: 3rem;
+  display: flex;
+  justify-content: center;
+}
+
+nav a {
+  margin: 0 2rem;
+}
+
+
