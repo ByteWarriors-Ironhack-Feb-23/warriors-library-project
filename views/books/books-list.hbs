@@ -10,5 +10,9 @@
             <a href="/books/{{this._id}}/edit">Edit</a>
         </p>
 
+        <form action="/books/{{_id}}/delete" method="POST">
+            <button>Delete</button>
+        </form>
+
     </section>
 {{/each}}

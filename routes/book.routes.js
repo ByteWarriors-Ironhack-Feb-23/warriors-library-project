@@ -30,7 +30,7 @@ router.get("/books/create", (req, res, next) => {
 
 //CREATE: process form
 router.post("/books", (req, res, next) => {
-  
+
   const bookDetails = {
     title: req.body.title,
     description: req.body.description,
@@ -39,7 +39,7 @@ router.post("/books", (req, res, next) => {
   }
 
   Book.create(bookDetails)
-    .then( bookFromDB => {
+    .then(bookFromDB => {
       res.redirect("/books");
     })
     .catch(e => {
@@ -54,10 +54,10 @@ router.post("/books", (req, res, next) => {
 //READ: book details
 router.get("/books/:bookId", (req, res, next) => {
 
-  const {bookId} = req.params;
+  const { bookId } = req.params;
 
   Book.findById(bookId)
-    .then( bookDetails => {
+    .then(bookDetails => {
       res.render("books/book-details", bookDetails);
     })
     .catch(e => {
@@ -72,7 +72,7 @@ router.get("/books/:bookId", (req, res, next) => {
 //UPDATE: display form
 router.get('/books/:bookId/edit', (req, res, next) => {
   const { bookId } = req.params;
- 
+
   Book.findById(bookId)
     .then(bookToEdit => {
       res.render('books/book-edit.hbs', { book: bookToEdit });
@@ -81,15 +81,27 @@ router.get('/books/:bookId/edit', (req, res, next) => {
 });
 
 
+
 //UPDATE: process form
 router.post('/books/:bookId/edit', (req, res, next) => {
   const { bookId } = req.params;
   const { title, description, author, rating } = req.body;
- 
+
   Book.findByIdAndUpdate(bookId, { title, description, author, rating }, { new: true })
     .then(updatedBook => {
       res.redirect(`/books/${updatedBook.id}`); //redirect to book details page
     })
+    .catch(error => next(error));
+});
+
+
+
+//DELETE
+router.post('/books/:bookId/delete', (req, res, next) => {
+  const { bookId } = req.params;
+
+  Book.findByIdAndDelete(bookId)
+    .then(() => res.redirect('/books'))
     .catch(error => next(error));
 });
 
