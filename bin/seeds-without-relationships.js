@@ -40,38 +40,38 @@ const authors = [
 ];
 
 
-const MONGO_URI = process.env.MONGODB_URI || 'mongodb://localhost/library-project';
 
-mongoose
-    .connect(MONGO_URI)
-    .then((x) => {
-        console.log(
-            `Connected to Mongo! Database name: "${x.connections[0].name}"`
-        );
 
-        //return Book.deleteMany({}); //WARNING: this will delete all books in your DB !!
-    })
-    .then( (response) => {
-        console.log(response);
-        
-        //return Author.deleteMany({}); //WARNING: this will delete all authors in your DB !!
-    })
-    .then( (response) => {
-        console.log(response);
-        
-        const booksPromise = Book.create(books);
-        const authorsPromise = Author.create(authors);
+async function seedData() {
+    try {
 
-        return Promise.all([booksPromise, authorsPromise]);
-    })
-    .then( result => {
-        const booksCreated = result[0];
-        const authorsCreated = result[1];
+        /* CONNECT */
+        const MONGO_URI = process.env.MONGODB_URI || 'mongodb://localhost/library-project';
+        const conn = await mongoose.connect(MONGO_URI);
+        console.log(`Connected to Mongo! Database name: "${conn.connections[0].name}"`);
+
+
+        /* DELETE EXISTING DATA */
+        // const deletedBooks = await Book.deleteMany({}); //WARNING: this will delete all books in your DB !!
+        // const deletedAuthors = await Author.deleteMany({}); //WARNING: this will delete all authors in your DB !!
+        //console.log(deletedBooks, deletedAuthors);
+
+
+        /* SEED */
+        const booksCreated = await Book.create(books);
+        const authorsCreated = await Author.create(authors);
+
         console.log(`Number of books created... ${booksCreated.length} `);
         console.log(`Number of authors created... ${authorsCreated.length} `);
 
-        // Once created, close the DB connection
+
+        /* CLOSE DB CONNECTION */
         mongoose.connection.close();
 
-    })
-    .catch(e => console.log("error seeding data in DB....", e));
+    } catch (e) {
+        console.log("error seeding data in DB....", e)
+    }
+}
+
+seedData();
+
