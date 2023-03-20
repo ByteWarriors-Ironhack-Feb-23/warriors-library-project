@@ -54,12 +54,12 @@ async function seedData() {
         /* DELETE EXISTING DATA */
         // const deletedBooks = await Book.deleteMany({}); //WARNING: this will delete all books in your DB !!
         // const deletedAuthors = await Author.deleteMany({}); //WARNING: this will delete all authors in your DB !!
-        //console.log(deletedBooks, deletedAuthors);
+        // console.log(deletedBooks, deletedAuthors);
 
 
         /* SEED */
-        const booksCreated = await Book.create(books);
-        const authorsCreated = await Author.create(authors);
+        const booksCreated = await Book.insertMany(books);
+        const authorsCreated = await Author.insertMany(authors);
 
         console.log(`Number of books created... ${booksCreated.length} `);
         console.log(`Number of authors created... ${authorsCreated.length} `);
