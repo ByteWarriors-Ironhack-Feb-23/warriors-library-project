@@ -9,9 +9,6 @@ router.get("/books", (req, res, next) => {
     .populate("author")
     .then(booksArr => {
 
-
-      console.log(booksArr);
-
       const data = {
         books: booksArr
       };
@@ -97,10 +94,22 @@ router.get("/books/:bookId", (req, res, next) => {
 router.get('/books/:bookId/edit', (req, res, next) => {
   const { bookId } = req.params;
 
+  let bookDetails;
+
   Book.findById(bookId)
-    .then(bookToEdit => {
-      res.render('books/book-edit.hbs', { book: bookToEdit });
+    .then(bookFromDB => {
+      bookDetails = bookFromDB; //update variable in the parent scope
+      return Author.find(); //get list of authors
     })
+    .then( authorsArr => {
+
+      const data = { 
+        book: bookDetails,
+        authors: authorsArr
+      }
+
+      res.render('books/book-edit.hbs', data);
+    } )
     .catch(error => next(error));
 });
 
