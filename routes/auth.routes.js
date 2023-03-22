@@ -43,7 +43,7 @@ router.post("/signup", (req, res, next) => {
     })
     .then( userFromDB  => {
       //account create succcessfully
-      res.redirect("/user-profile");
+      res.redirect("/login");
     })
     .catch(error => {
       console.log("error creating account...", error);
