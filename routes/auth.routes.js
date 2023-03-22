@@ -22,10 +22,10 @@ router.post("/signup", (req, res, next) => {
 
   //validation: required fields
   if (email === "" || password === "") {
-    res.render('auth/register', { errorMessage: 'All fields are mandatory. Please provide your email and password.' });
+    res.status(400).render('auth/register', { errorMessage: 'All fields are mandatory. Please provide your email and password.' });
     return;
   }
-  
+
 
   //validation: pw strength
   const regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
@@ -57,6 +57,45 @@ router.post("/signup", (req, res, next) => {
     });
 
 });
+
+
+
+//GET /login
+router.get("/login", (req, res, next) => {
+  res.render("auth/login");
+});
+
+
+
+//POST /login
+router.post('/login', (req, res, next) => {
+  const { email, password } = req.body;
+
+  if (email === '' || password === '') {
+    res.status(400).render('auth/login', { errorMessage: 'Please enter both, email and password to login.' });
+    return;
+  }
+
+  User.findOne({ email: email })
+    .then(user => {
+      if (!user) {
+        //user doesn't exist
+        res.status(400).render('auth/login', { errorMessage: 'Email is not registered. Try with other email.' });
+        return;
+      } else if (bcryptjs.compareSync(password, user.passwordHash)) {
+        //login successful
+        res.render('auth/user-profile', { user });
+      } else {
+        //login failed
+        res.status(400).render('auth/login', { errorMessage: 'Incorrect password.' });
+      }
+    })
+    .catch(error => {
+      console.log("error trying to login...", error);
+      next(error);
+    });
+});
+
 
 
 //GET user-profile
