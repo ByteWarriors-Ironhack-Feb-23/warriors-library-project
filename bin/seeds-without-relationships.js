@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 const Book = require('../models/Book.model');
 const Author = require('../models/Author.model');
 
+require('dotenv').config(); // import and configure dotenv (loads environment variables from .env file)
+
+const MONGO_URI = process.env.MONGODB_URI || 'mongodb://localhost/library-project';
 
 
 const books = [
@@ -40,7 +43,6 @@ const authors = [
 ];
 
 
-const MONGO_URI = process.env.MONGODB_URI || 'mongodb://localhost/library-project';
 
 mongoose
     .connect(MONGO_URI)

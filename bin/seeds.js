@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Book = require('../models/Book.model');
 
+require('dotenv').config(); // import and configure dotenv (loads environment variables from .env file)
+
 const MONGO_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/library-project';
 
 
